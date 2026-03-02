@@ -1,0 +1,29 @@
+---
+import AccentDot from "../atoms/AccentDot.astro";
+
+interface Props {
+  filter: string;
+  label: string;
+  count: number;
+  accent?: string;
+  active?: boolean;
+}
+
+const { filter, label, count, accent, active = false } = Astro.props;
+---
+
+<button
+  class:list={[
+    "filter-pill flex shrink-0 cursor-pointer items-center gap-2 rounded-full backdrop-blur-sm font-display text-xs transition-all duration-250",
+    active
+      ? "border border-accent/40 bg-accent/10 px-4 py-2 font-semibold text-accent shadow-md shadow-accent/10"
+      : "border border-border/60 bg-surface/80 px-4 py-2 font-medium text-text-muted hover:-translate-y-0.5 hover:border-white/15 hover:bg-surface hover:text-white hover:shadow-lg hover:shadow-black/30",
+  ]}
+  data-filter={filter}
+  role="tab"
+  aria-selected={active ? "true" : "false"}
+>
+  {accent && <AccentDot color={accent} size="md" />}
+  <span>{label}</span>
+  <span class="rounded-full bg-white/5 px-1.5 py-0.5 text-[10px] tabular-nums opacity-50">{count}</span>
+</button>

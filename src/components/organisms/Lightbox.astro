@@ -1,0 +1,106 @@
+---
+---
+
+<div
+  id="lightbox"
+  class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/90 backdrop-blur-md"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Vista ampliada"
+>
+  <!-- Close button -->
+  <button
+    id="lightbox-close"
+    class="absolute top-4 right-4 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+    aria-label="Cerrar"
+  >
+    <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Content -->
+  <div class="flex max-h-[90vh] max-w-[90vw] flex-col items-center gap-4">
+    <img
+      id="lightbox-img"
+      src=""
+      alt=""
+      class="max-h-[80vh] rounded-xl object-contain shadow-2xl"
+    />
+    <div class="flex items-center gap-2 text-center">
+      <div id="lightbox-dot" class="size-2 rounded-full"></div>
+      <p id="lightbox-name" class="font-display text-base font-semibold text-white"></p>
+    </div>
+    <p id="lightbox-cat" class="text-sm text-text-muted"></p>
+  </div>
+</div>
+
+<script>
+  const lightbox = document.getElementById("lightbox")!;
+  const lbImg = document.getElementById("lightbox-img") as HTMLImageElement;
+  const lbName = document.getElementById("lightbox-name")!;
+  const lbCat = document.getElementById("lightbox-cat")!;
+  const lbDot = document.getElementById("lightbox-dot")!;
+  const lbClose = document.getElementById("lightbox-close")!;
+
+  function openLightbox(card: HTMLElement) {
+    const img = card.querySelector("img") as HTMLImageElement | null;
+    if (!img) return;
+
+    // Pick the largest srcset URL
+    const srcset = img.getAttribute("srcset");
+    let bestSrc = img.src;
+    if (srcset) {
+      const sources = srcset.split(",").map((s) => s.trim().split(/\s+/));
+      const last = sources[sources.length - 1];
+      if (last?.[0]) bestSrc = last[0];
+    }
+
+    lbImg.src = bestSrc;
+    lbImg.alt = img.alt;
+    lbName.textContent = card.dataset.name ?? "";
+    lbDot.style.background = card.dataset.accent ?? "#ff4444";
+
+    const catEl = card.querySelector("[data-category-label]") as HTMLElement | null;
+    lbCat.textContent = catEl?.textContent ?? "";
+
+    lightbox.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    lightbox.style.display = "none";
+    lbImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  lbClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
+
+  // Global helper for attaching listeners
+  function attachCardListeners(cards: HTMLElement[]) {
+    cards.forEach((card) => {
+      if (card.hasAttribute("data-lb")) return;
+      card.setAttribute("data-lb", "true");
+      card.addEventListener("click", () => openLightbox(card));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openLightbox(card);
+        }
+      });
+    });
+  }
+
+  (window as any).__attachCardListeners = attachCardListeners;
+
+  // Attach to initial cards
+  attachCardListeners(
+    Array.from(document.querySelectorAll<HTMLElement>(".product-card"))
+  );
+</script>

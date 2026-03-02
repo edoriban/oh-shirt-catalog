@@ -1,0 +1,20 @@
+---
+interface Props {
+  class?: string;
+  size?: "sm" | "md" | "lg";
+}
+
+const { class: className = "", size = "md" } = Astro.props;
+
+const sizes = {
+  sm: "h-8",
+  md: "h-10 sm:h-12",
+  lg: "h-14",
+};
+---
+
+<img
+  src="/logo.jpg"
+  alt="Oh Shirt!"
+  class:list={[sizes[size], "w-auto rounded", className]}
+/>

@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/organisms/Header.astro";
+import HeroSection from "../../components/organisms/HeroSection.astro";
+import CategoryFilter from "../../components/organisms/CategoryFilter.astro";
+import ProductGrid from "../../components/organisms/ProductGrid.astro";
+import Lightbox from "../../components/organisms/Lightbox.astro";
+import Footer from "../../components/organisms/Footer.astro";
+import WhatsAppButton from "../../components/organisms/WhatsAppButton.astro";
+import ScrollAnimations from "../../components/organisms/ScrollAnimations.astro";
+import { getAllProducts } from "../../data/products";
+
+const products = getAllProducts();
+---
+
+<Layout>
+  <Header />
+  <main>
+    <HeroSection />
+    <CategoryFilter />
+    <ProductGrid products={products} />
+  </main>
+  <Footer />
+  <Lightbox />
+  <WhatsAppButton />
+  <ScrollAnimations />
+</Layout>

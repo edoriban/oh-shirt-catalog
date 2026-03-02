@@ -1,0 +1,35 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  accent: string;
+  count: number;
+  slug: string;
+}
+
+const { name, description, accent, count, slug } = Astro.props;
+---
+
+<div
+  class="category-header col-span-full flex items-center gap-4 pt-10 pb-3"
+  data-category-header={slug}
+>
+  <!-- Accent bar -->
+  <div
+    class="h-8 w-1 rounded-full"
+    style={`background: linear-gradient(to bottom, ${accent}, transparent)`}
+  ></div>
+
+  <div class="flex-1">
+    <h2 class="font-display text-xl font-bold tracking-tight text-text sm:text-2xl">{name}</h2>
+    <p class="mt-0.5 text-xs text-text-muted">{description}</p>
+  </div>
+
+  <!-- Count badge -->
+  <span
+    class="rounded-full px-3 py-1 font-display text-xs font-semibold tabular-nums"
+    style={`background:${accent}15; color:${accent}; border: 1px solid ${accent}25`}
+  >
+    {count} diseños
+  </span>
+</div>

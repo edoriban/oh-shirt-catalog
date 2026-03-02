@@ -1,0 +1,13 @@
+---
+const sizes = ["S", "M", "L", "XL", "XXL"];
+---
+
+<div class="flex items-center gap-1.5">
+  {
+    sizes.map((s) => (
+      <span class="rounded border border-border bg-bg px-2 py-0.5 text-[10px] font-semibold tracking-wider text-text-muted">
+        {s}
+      </span>
+    ))
+  }
+</div>

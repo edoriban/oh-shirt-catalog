@@ -1,0 +1,11 @@
+---
+interface Props {
+  color: string;
+  size?: "sm" | "md";
+}
+
+const { color, size = "sm" } = Astro.props;
+const px = size === "sm" ? "size-1.5" : "size-2";
+---
+
+<span class:list={[px, "inline-block shrink-0 rounded-full"]} style={`background:${color}`}></span>
