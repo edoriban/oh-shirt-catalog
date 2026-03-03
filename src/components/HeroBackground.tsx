@@ -1,6 +1,24 @@
+import { useEffect, useState } from "react";
 import PixelBlast from "./PixelBlast";
 
+const SM_BREAKPOINT = 640;
+
 export default function HeroBackground() {
+  const [canRender, setCanRender] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const isDesktop = window.innerWidth >= SM_BREAKPOINT;
+
+    if (isDesktop && !prefersReducedMotion) {
+      setCanRender(true);
+    }
+  }, []);
+
+  if (!canRender) return null;
+
   return (
     <div style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
       <PixelBlast
