@@ -3,6 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/organisms/Header.astro";
 import Footer from "../components/organisms/Footer.astro";
 import WhatsAppButton from "../components/organisms/WhatsAppButton.astro";
+import Breadcrumb from "../components/atoms/Breadcrumb.astro";
+
+const breadcrumbs = [
+  { label: "Inicio", href: "/catalog" },
+  { label: "Contacto" },
+];
 
 const phone = "5218127261623";
 const waMessage = encodeURIComponent("¡Hola! Me interesa una playera del catálogo Oh Shirt!");
@@ -16,7 +22,10 @@ const quickLinks = [
 ];
 ---
 
-<Layout title="Contacto — Oh Shirt!" description="Contáctanos por WhatsApp o Instagram para pedidos, dudas y más.">
+<Layout
+  title="Contacto por WhatsApp — Oh Shirt!"
+  description="Contactanos por WhatsApp para pedidos, dudas de tallas y disenos personalizados. Respuesta en minutos. Lun-Sab 9am-8pm."
+>
   <Header />
   <main id="main-content" class="relative min-h-screen pt-28 pb-20 sm:pt-36">
     <!-- Layered background glows -->
@@ -24,6 +33,7 @@ const quickLinks = [
     <div class="pointer-events-none absolute top-[60%] right-0 h-60 w-full max-w-80 rounded-full bg-[#25d366]/[0.03] blur-[120px]"></div>
 
     <div class="relative mx-auto max-w-4xl px-4 sm:px-6">
+      <Breadcrumb items={breadcrumbs} />
 
       <!-- ── Page header ── -->
       <div class="mb-12 text-center sm:mb-16">

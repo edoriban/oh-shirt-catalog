@@ -3,6 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/organisms/Header.astro";
 import Footer from "../components/organisms/Footer.astro";
 import WhatsAppButton from "../components/organisms/WhatsAppButton.astro";
+import Breadcrumb from "../components/atoms/Breadcrumb.astro";
+
+const breadcrumbs = [
+  { label: "Inicio", href: "/catalog" },
+  { label: "Politicas" },
+];
 
 const sections = [
   {
@@ -37,13 +43,17 @@ const sections = [
 ];
 ---
 
-<Layout title="Políticas — Oh Shirt!" description="Políticas de privacidad, términos de compra y devoluciones de Oh Shirt!">
+<Layout
+  title="Politicas de Privacidad y Devoluciones — Oh Shirt!"
+  description="Conoce nuestras politicas de privacidad, terminos de compra, cambios y devoluciones en Oh Shirt! Ultima actualizacion: Marzo 2026."
+>
   <Header />
   <main id="main-content" class="relative min-h-screen pt-28 pb-16 sm:pt-36">
     <!-- Background glow -->
     <div class="pointer-events-none absolute top-32 left-1/2 -translate-x-1/2 h-64 w-full max-w-[28rem] rounded-full bg-accent/[0.04] blur-[120px]"></div>
 
     <div class="relative mx-auto max-w-3xl px-4 sm:px-6">
+      <Breadcrumb items={breadcrumbs} />
       <!-- Page title -->
       <div class="mb-10 text-center">
         <h1 class="font-brand text-2xl font-normal uppercase tracking-wider text-text sm:text-3xl">

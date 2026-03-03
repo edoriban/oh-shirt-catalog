@@ -3,6 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/organisms/Header.astro";
 import Footer from "../components/organisms/Footer.astro";
 import WhatsAppButton from "../components/organisms/WhatsAppButton.astro";
+import Breadcrumb from "../components/atoms/Breadcrumb.astro";
+
+const breadcrumbs = [
+  { label: "Inicio", href: "/catalog" },
+  { label: "Preguntas Frecuentes" },
+];
 
 const faqs = [
   {
@@ -38,15 +44,33 @@ const faqs = [
     answer: "Aceptamos cambios por talla dentro de los primeros 7 días naturales, siempre que la playera esté sin uso y con etiquetas. Consulta nuestras políticas completas para más detalles.",
   },
 ];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+};
 ---
 
-<Layout title="FAQ — Oh Shirt!" description="Preguntas frecuentes sobre pedidos, tallas, envíos y más en Oh Shirt!">
+<Layout
+  title="Preguntas Frecuentes sobre Pedidos y Envios — Oh Shirt!"
+  description="Resolvemos tus dudas sobre tallas, materiales, envios, pagos y devoluciones en Oh Shirt! Todo lo que necesitas saber antes de tu pedido."
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <Header />
   <main id="main-content" class="relative min-h-screen pt-28 pb-16 sm:pt-36">
     <!-- Background glow -->
     <div class="pointer-events-none absolute top-32 left-1/2 -translate-x-1/2 h-64 w-full max-w-[28rem] rounded-full bg-accent/[0.04] blur-[120px]"></div>
 
     <div class="relative mx-auto max-w-3xl px-4 sm:px-6">
+      <Breadcrumb items={breadcrumbs} />
       <!-- Page title -->
       <div class="mb-10 text-center">
         <h1 class="font-brand text-2xl font-normal uppercase tracking-wider text-text sm:text-3xl">
