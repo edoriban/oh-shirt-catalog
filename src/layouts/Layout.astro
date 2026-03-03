@@ -1,4 +1,6 @@
 ---
+import GlobalSearch from "../components/organisms/GlobalSearch.astro";
+
 interface Props {
   title?: string;
   description?: string;
@@ -81,5 +83,6 @@ const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
       Saltar al contenido
     </a>
     <slot />
+    <GlobalSearch />
   </body>
 </html>

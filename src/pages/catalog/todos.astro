@@ -55,6 +55,21 @@ const breadcrumbs = [
 </Layout>
 
 <script>
+  // Pre-fill search from ?q= query param
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get("q");
+  if (qParam) {
+    const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
+    if (searchInput) {
+      searchInput.value = qParam;
+      searchInput.dispatchEvent(new Event("input"));
+      // Scroll to filter area after a tick
+      setTimeout(() => searchInput.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+    }
+  }
+</script>
+
+<script>
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
 

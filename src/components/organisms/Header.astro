@@ -30,6 +30,20 @@ const navLinks = [
         </a>
       ))}
 
+      <!-- Search button (desktop) -->
+      <button
+        id="search-btn-desktop"
+        type="button"
+        class="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-medium text-text-muted transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07] hover:text-text md:flex"
+        aria-label="Buscar productos"
+      >
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span>Buscar</span>
+        <kbd class="rounded border border-white/10 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] leading-none text-text-muted/60">⌘K</kbd>
+      </button>
+
       <div class="hidden h-4 w-px bg-white/[0.08] md:block"></div>
 
       <!-- Instagram: visible on desktop, hidden on mobile (accessible via hamburger) -->
@@ -40,6 +54,18 @@ const navLinks = [
           </svg>
         </SocialLink>
       </div>
+
+      <!-- Search button (mobile) -->
+      <button
+        id="search-btn-mobile"
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-sm transition-all duration-200 active:scale-95 md:hidden"
+        aria-label="Buscar productos"
+      >
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
 
       <!-- Mobile hamburger button -->
       <button
@@ -143,4 +169,16 @@ const navLinks = [
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && isOpen) closeMenu();
   });
+
+  // Global search buttons
+  var searchDesktop = document.getElementById('search-btn-desktop');
+  var searchMobile = document.getElementById('search-btn-mobile');
+
+  function triggerSearch() {
+    if (isOpen) closeMenu();
+    if (window.__openGlobalSearch) window.__openGlobalSearch();
+  }
+
+  if (searchDesktop) searchDesktop.addEventListener('click', triggerSearch);
+  if (searchMobile) searchMobile.addEventListener('click', triggerSearch);
 </script>
