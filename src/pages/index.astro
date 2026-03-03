@@ -1,3 +1,170 @@
 ---
-return Astro.redirect("/catalog");
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/organisms/Header.astro";
+import HeroSection from "../components/organisms/HeroSection.astro";
+import ProductCard from "../components/molecules/ProductCard.astro";
+import FranchiseCard from "../components/molecules/FranchiseCard.astro";
+import Lightbox from "../components/organisms/Lightbox.astro";
+import Footer from "../components/organisms/Footer.astro";
+import WhatsAppButton from "../components/organisms/WhatsAppButton.astro";
+import ScrollAnimations from "../components/organisms/ScrollAnimations.astro";
+import { getAllProducts, getRandomFromCategory } from "../data/products";
+import { categories } from "../data/categories";
+
+// Pick 4 random featured products
+const allProducts = getAllProducts();
+const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
+const featured = shuffled.slice(0, 4);
+
+// Get a representative hero image for each franchise
+const franchiseData = categories
+  .map((cat) => {
+    const preview = getRandomFromCategory(cat.slug, 1);
+    return {
+      ...cat,
+      heroImage: preview[0]?.image,
+    };
+  })
+  .filter((cat) => cat.heroImage);
 ---
+
+<Layout
+  title="Oh Shirt! — Playeras Exclusivas de Anime y Pop Culture"
+  description="Catalogo de playeras con disenos exclusivos de Demon Slayer, Star Wars, One Piece, ThunderCats y mas. Envios a todo Mexico."
+>
+  <Header />
+  <main id="main-content">
+    <h1 class="sr-only">Catalogo de playeras Oh Shirt! — Disenos exclusivos de anime y pop culture</h1>
+    <HeroSection />
+
+    <!-- Featured Products -->
+    <section
+      class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6"
+      aria-labelledby="featured-title"
+    >
+      <!-- Ambient accent glow -->
+      <div
+        class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-full max-w-[28rem] rounded-full bg-accent/[0.04] blur-[100px]"
+      >
+      </div>
+
+      <div class="mb-6 flex items-center gap-3">
+        <div
+          id="featured-line-left"
+          class="h-px flex-1 origin-right bg-gradient-to-r from-transparent via-border to-transparent"
+        >
+        </div>
+        <h2
+          id="featured-title"
+          class="flex items-center gap-2 font-brand text-sm font-normal uppercase tracking-widest text-text-muted"
+        >
+          <svg
+            width="16" height="16" class="text-accent"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L14.5 8.5L21 9.5L16.5 14L17.5 21L12 17.5L6.5 21L7.5 14L3 9.5L9.5 8.5Z"
+            ></path>
+          </svg>
+          Destacados
+        </h2>
+        <div
+          id="featured-line-right"
+          class="h-px flex-1 origin-left bg-gradient-to-r from-transparent via-border to-transparent"
+        >
+        </div>
+      </div>
+
+      <div
+        id="featured-grid"
+        class="featured-glass grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 pb-12"
+      >
+        {featured.map((product) => <ProductCard product={product} />)}
+      </div>
+
+      <!-- CTA to full catalog -->
+      <a
+        id="featured-cta"
+        href="/catalog/todos"
+        class="group mt-4 flex items-center justify-between rounded-2xl border-2 border-accent bg-transparent p-4 no-underline transition-all duration-300 hover:border-bg hover:bg-accent sm:p-5"
+      >
+        <div class="flex items-center gap-3 sm:gap-4">
+          <p
+            class="font-brand text-sm font-normal uppercase tracking-tight text-text transition-colors duration-300 group-hover:text-white sm:text-base"
+          >
+            Explorar todo el catálogo
+          </p>
+          <span
+            class="hidden h-4 w-px bg-accent/30 transition-colors duration-300 group-hover:bg-white/30 sm:block"
+          ></span>
+          <p
+            class="hidden text-xs text-text-muted transition-colors duration-300 group-hover:text-white/70 sm:block"
+          >
+            {allProducts.length} diseños &middot; {categories.length} franquicias
+          </p>
+        </div>
+        <div
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 transition-all duration-300 group-hover:border-white/30 sm:h-11 sm:w-11"
+        >
+          <svg
+            width="20" height="20" class="text-accent transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-white"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+          </svg>
+        </div>
+      </a>
+    </section>
+
+    <!-- Franchise Collections -->
+    <section
+      class="mx-auto max-w-7xl px-4 pb-12 pt-4 sm:px-6"
+      aria-labelledby="franchises-title"
+    >
+      <div class="mb-8 flex items-center gap-3">
+        <div
+          id="franchises-line-left"
+          class="h-px flex-1 origin-right bg-gradient-to-r from-transparent via-border to-transparent"
+        >
+        </div>
+        <h2
+          id="franchises-title"
+          class="font-brand text-sm font-normal uppercase tracking-widest text-text-muted"
+        >
+          Colecciones
+        </h2>
+        <div
+          id="franchises-line-right"
+          class="h-px flex-1 origin-left bg-gradient-to-r from-transparent via-border to-transparent"
+        >
+        </div>
+      </div>
+
+      <div id="franchise-grid" class="grid gap-4 sm:grid-cols-2">
+        {
+          franchiseData.map((cat) => (
+            <FranchiseCard
+              slug={cat.slug}
+              name={cat.name}
+              description={cat.description}
+              accent={cat.accent}
+              count={cat.count}
+              heroImage={cat.heroImage}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </main>
+  <Footer />
+  <Lightbox />
+  <WhatsAppButton />
+  <ScrollAnimations />
+</Layout>

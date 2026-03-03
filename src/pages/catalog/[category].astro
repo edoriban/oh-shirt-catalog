@@ -24,7 +24,7 @@ const randomHero = getRandomFromCategory(category.slug, 1);
 const heroProduct = randomHero[0] ?? products[0];
 
 const breadcrumbs = [
-  { label: "Inicio", href: "/catalog" },
+  { label: "Inicio", href: "/" },
   { label: "Catálogo", href: "/catalog/todos" },
   { label: category.name },
 ];
