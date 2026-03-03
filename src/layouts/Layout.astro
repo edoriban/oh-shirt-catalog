@@ -42,8 +42,15 @@ const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
     <!-- Fonts: Special Gothic Expanded One (brand) + Space Grotesk (display) + DM Sans (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Brand font: display=block prevents layout shift (invisible until loaded) -->
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Special+Gothic+Expanded+One&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=block"
+      rel="stylesheet"
+      fetchpriority="high"
+    />
+    <!-- Body + display fonts: display=swap for fast text render -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -61,7 +68,7 @@ const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
 
     <title>{title}</title>
 
-    <style>
+    <style is:global>
       @import "../styles/global.css";
     </style>
   </head>
