@@ -151,30 +151,17 @@ const breadcrumbs = [
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (!prefersReduced) {
+  if (prefersReduced) {
+    gsap.set("#category-title", { visibility: "visible", opacity: 1 });
+  } else {
     gsap.fromTo(
       "#category-title",
       { autoAlpha: 0, y: 20 },
       { autoAlpha: 1, y: 0, duration: 0.7, ease: "power2.out" }
     );
 
-    ScrollTrigger.batch(".product-card", {
-      onEnter: (batch) => {
-        gsap.fromTo(
-          batch,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.05,
-            ease: "power2.out",
-            overwrite: true,
-          }
-        );
-      },
-      start: "top 92%",
-    });
+    // No GSAP batch for product cards — avoids the visible
+    // jump-down-then-animate-up flash on first render.
   }
 
   document.querySelectorAll<HTMLElement>(".product-card").forEach((c) => {
@@ -213,3 +200,9 @@ const breadcrumbs = [
     }
   });
 </script>
+
+<style>
+  #category-title {
+    visibility: hidden;
+  }
+</style>
