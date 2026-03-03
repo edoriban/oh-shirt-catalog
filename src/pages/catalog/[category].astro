@@ -62,11 +62,11 @@ const breadcrumbs = [
               <div class="flex-1">
                 <div class="mb-2 flex items-center gap-2">
                   <div
-                    class="flex size-10 items-center justify-center rounded-xl backdrop-blur-sm"
+                    class="flex h-10 w-10 items-center justify-center rounded-xl backdrop-blur-sm"
                     style={`background:${category.accent}20; border: 1px solid ${category.accent}30`}
                     aria-hidden="true"
                   >
-                    <CategoryIcon slug={category.slug} color={category.accent} class="size-5" />
+                    <CategoryIcon slug={category.slug} color={category.accent} class="h-5 w-5" />
                   </div>
                   <span
                     class="rounded-full px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm"
@@ -96,7 +96,7 @@ const breadcrumbs = [
       <div class="mb-6">
         <div class="relative">
           <svg
-            class="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-text-muted"
+            width="16" height="16" class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-text-muted"
             fill="none"
             stroke="currentColor"
             stroke-width="2"

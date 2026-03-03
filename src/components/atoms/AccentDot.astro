@@ -5,7 +5,7 @@ interface Props {
 }
 
 const { color, size = "sm" } = Astro.props;
-const px = size === "sm" ? "size-1.5" : "size-2";
+const px = size === "sm" ? "h-1.5 w-1.5" : "h-2 w-2";
 ---
 
 <span class:list={[px, "inline-block shrink-0 rounded-full"]} style={`background:${color}`}></span>
