@@ -27,10 +27,13 @@
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const allHidden =
-    "#hero-title, #hero-subtitle, #featured-title, #featured-line-left, #featured-line-right, #featured-cta, #franchises-title, #franchises-line-left, #franchises-line-right, .filter-pill";
+    "#hero-title, #hero-subtitle, #featured-title, #featured-line-left, #featured-line-right, #featured-cta, #franchises-title, #franchises-line-left, #franchises-line-right";
 
   if (prefersReduced) {
     gsap.set(allHidden, { visibility: "visible" });
+    if (document.querySelectorAll(".filter-pill").length) {
+      gsap.set(".filter-pill", { visibility: "visible" });
+    }
     gsap.set(".franchise-card, #featured-grid .product-card, .category-header", { opacity: 1 });
   } else {
     // ─── Hero entrance (instant, no scroll needed) ───
@@ -47,13 +50,17 @@
         { autoAlpha: 0, y: 15 },
         { autoAlpha: 1, y: 0, duration: 0.4 },
         "-=0.35"
-      )
-      .fromTo(
-        ".filter-pill",
+      );
+
+    const filterPills = document.querySelectorAll(".filter-pill");
+    if (filterPills.length) {
+      heroTl.fromTo(
+        filterPills,
         { autoAlpha: 0, y: 8 },
         { autoAlpha: 1, y: 0, duration: 0.25, stagger: 0.03 },
         "-=0.2"
       );
+    }
 
     // ─── Featured section ────────────────────────
 
