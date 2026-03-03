@@ -1,0 +1,93 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/organisms/Header.astro";
+import Footer from "../components/organisms/Footer.astro";
+import WhatsAppButton from "../components/organisms/WhatsAppButton.astro";
+
+const sections = [
+  {
+    title: "Política de Privacidad",
+    items: [
+      { label: null, text: "En Oh Shirt! respetamos tu privacidad. La información que nos proporcionas (nombre, dirección de envío, teléfono) se utiliza exclusivamente para procesar y entregar tus pedidos." },
+      { label: "Datos que recopilamos", text: "Nombre, número de teléfono (WhatsApp), dirección de envío y datos de pago. No almacenamos información de tarjetas de crédito o débito." },
+      { label: "Uso de la información", text: "Tus datos se usan únicamente para gestionar pedidos, envíos y comunicarnos contigo sobre el estado de tu compra." },
+      { label: "Compartición de datos", text: "No vendemos, intercambiamos ni compartimos tu información personal con terceros, excepto con servicios de paquetería para realizar envíos." },
+      { label: "Cookies", text: "Nuestro sitio web puede usar cookies funcionales para mejorar tu experiencia de navegación. No utilizamos cookies de rastreo publicitario." },
+    ],
+  },
+  {
+    title: "Términos de Compra",
+    items: [
+      { label: "Proceso de compra", text: "Todos los pedidos se realizan a través de WhatsApp. Una vez confirmado el diseño, talla y dirección de envío, te enviaremos los datos para realizar el pago." },
+      { label: "Precios", text: "Los precios publicados en el catálogo están en pesos mexicanos (MXN) y no incluyen gastos de envío, salvo que se indique lo contrario." },
+      { label: "Pago", text: "El pago se realiza por adelantado vía transferencia bancaria, depósito en OXXO o link de pago con tarjeta. Tu pedido se procesa una vez confirmado el pago." },
+      { label: "Disponibilidad", text: "Todos los productos están sujetos a disponibilidad. En caso de no contar con el diseño o talla solicitada, te notificaremos y ofreceremos alternativas o reembolso total." },
+      { label: "Tiempos de envío", text: "Los pedidos se preparan en 1-3 días hábiles. El tiempo de entrega varía según la ubicación: 1-2 días para Monterrey y área metropolitana, 3-7 días hábiles para envíos nacionales." },
+    ],
+  },
+  {
+    title: "Cambios y Devoluciones",
+    items: [
+      { label: "Cambios por talla", text: "Aceptamos cambios de talla dentro de los primeros 7 días naturales después de la entrega. La playera debe estar sin uso, sin lavar y con etiquetas originales." },
+      { label: "Productos defectuosos", text: "Si recibes un producto con defecto de fabricación o impresión, contáctanos por WhatsApp dentro de las 48 horas posteriores a la recepción con fotos del defecto. Te enviaremos un reemplazo sin costo." },
+      { label: "No aceptamos devoluciones por", text: "Cambio de opinión sobre el diseño elegido, uso o lavado del producto, o daños causados por mal cuidado de la prenda." },
+      { label: "Gastos de envío por cambio", text: "El costo de envío para cambios corre por cuenta del cliente, excepto en casos de error nuestro o producto defectuoso." },
+    ],
+  },
+];
+---
+
+<Layout title="Políticas — Oh Shirt!" description="Políticas de privacidad, términos de compra y devoluciones de Oh Shirt!">
+  <Header />
+  <main id="main-content" class="relative min-h-screen pt-28 pb-16 sm:pt-36">
+    <!-- Background glow -->
+    <div class="pointer-events-none absolute top-32 left-1/2 -translate-x-1/2 h-64 w-full max-w-[28rem] rounded-full bg-accent/[0.04] blur-[120px]"></div>
+
+    <div class="relative mx-auto max-w-3xl px-4 sm:px-6">
+      <!-- Page title -->
+      <div class="mb-10 text-center">
+        <h1 class="font-brand text-2xl font-normal uppercase tracking-wider text-text sm:text-3xl">
+          Políticas
+        </h1>
+        <p class="mt-3 text-sm text-text-muted">
+          Última actualización: Marzo 2026
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-8">
+        {sections.map((section) => (
+          <section
+            class="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm sm:p-8"
+            style="box-shadow: 0 2px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.03)"
+          >
+            <h2 class="mb-5 font-display text-lg font-semibold text-text">{section.title}</h2>
+            <ul class="flex flex-col gap-4">
+              {section.items.map((item) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-text-muted">
+                  <span class="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-accent/40"></span>
+                  <span>
+                    {item.label && <strong class="text-text">{item.label}:&nbsp;</strong>}
+                    {item.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      <!-- Contact CTA -->
+      <div class="mt-10 text-center">
+        <p class="mb-4 text-sm text-text-muted">¿Tienes dudas sobre nuestras políticas?</p>
+        <a
+          href="/contacto"
+          class="no-underline inline-flex items-center gap-2 rounded-2xl border border-accent/30 bg-accent/10 px-6 py-3 font-display text-sm font-semibold uppercase tracking-wider text-accent transition-all duration-200 hover:border-accent/50 hover:bg-accent/20"
+        >
+          Contáctanos
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+  <WhatsAppButton />
+</Layout>
