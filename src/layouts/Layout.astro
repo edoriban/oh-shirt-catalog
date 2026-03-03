@@ -24,6 +24,8 @@ const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
     <meta name="theme-color" content="#06060b" />
     <link rel="canonical" href={canonicalURL.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -56,13 +58,25 @@ const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
       rel="stylesheet"
     />
 
-    <!-- JSON-LD: Organization -->
+    <!-- JSON-LD: LocalBusiness -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": "LocalBusiness",
       "name": "Oh Shirt!",
       "url": "https://ohshirt.mx",
       "logo": ogImageURL.href,
+      "telephone": "+52-812-726-1623",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Monterrey",
+        "addressRegion": "NL",
+        "addressCountry": "MX"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "telephone": "+52-812-726-1623"
+      },
       "sameAs": [
         "https://www.instagram.com/oh_shirt_print/"
       ]

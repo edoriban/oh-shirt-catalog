@@ -1,0 +1,16 @@
+{
+  "name": "Oh Shirt! — Playeras Exclusivas",
+  "short_name": "Oh Shirt!",
+  "description": "Catalogo de playeras con disenos exclusivos de anime y pop culture.",
+  "start_url": "/catalog",
+  "display": "standalone",
+  "background_color": "#06060b",
+  "theme_color": "#06060b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
