@@ -11,34 +11,12 @@ interface Props {
 const { products } = Astro.props;
 
 // Group products by category in the defined order
-const grouped = categories.map((cat) => ({
-  ...cat,
-  products: products.filter((p) => p.category === cat.slug),
-}));
-
-// First batch: first N products across all categories
-const INITIAL_BATCH = 24;
-let initialItems: Array<{ type: "header"; cat: typeof categories[number] } | { type: "product"; product: Product }> = [];
-let remainingProducts: Product[] = [];
-
-let count = 0;
-for (const group of grouped) {
-  if (count >= INITIAL_BATCH) {
-    remainingProducts.push(...group.products);
-    continue;
-  }
-
-  initialItems.push({ type: "header", cat: group });
-
-  for (const product of group.products) {
-    if (count < INITIAL_BATCH) {
-      initialItems.push({ type: "product", product });
-      count++;
-    } else {
-      remainingProducts.push(product);
-    }
-  }
-}
+const grouped = categories
+  .map((cat) => ({
+    ...cat,
+    products: products.filter((p) => p.category === cat.slug),
+  }))
+  .filter((g) => g.products.length > 0);
 ---
 
 <section id="catalogo" class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
@@ -46,29 +24,20 @@ for (const group of grouped) {
     id="product-grid"
     class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
   >
-    {initialItems.map((item) =>
-      item.type === "header" ? (
+    {grouped.map((group) => (
+      <>
         <CategoryHeader
-          name={item.cat.name}
-          description={item.cat.description}
-          accent={item.cat.accent}
-          count={item.cat.count}
-          slug={item.cat.slug}
+          name={group.name}
+          description={group.description}
+          accent={group.accent}
+          count={group.count}
+          slug={group.slug}
         />
-      ) : (
-        <ProductCard product={item.product} />
-      )
-    )}
-  </div>
-
-  <!-- Remaining cards for lazy loading -->
-  <template id="remaining-cards">
-    {remainingProducts.map((product) => <ProductCard product={product} />)}
-  </template>
-
-  <!-- Load sentinel -->
-  <div id="load-sentinel" class="flex justify-center py-8">
-    <div class="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-accent"></div>
+        {group.products.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </>
+    ))}
   </div>
 
   <p
@@ -80,67 +49,8 @@ for (const group of grouped) {
 </section>
 
 <script>
-  const BATCH_SIZE = 20;
+  // Mark all cards as revealed for lightbox + animations
   const grid = document.getElementById("product-grid")!;
-  const template = document.getElementById("remaining-cards") as HTMLTemplateElement;
-  const sentinel = document.getElementById("load-sentinel")!;
-
-  const remainingNodes = Array.from(template.content.children) as HTMLElement[];
-  let loaded = remainingNodes.length === 0;
-
-  if (loaded) sentinel.style.display = "none";
-
-  function loadNextBatch() {
-    if (remainingNodes.length === 0) {
-      sentinel.style.display = "none";
-      loaded = true;
-      return;
-    }
-
-    const batch = remainingNodes.splice(0, BATCH_SIZE);
-    const fragment = document.createDocumentFragment();
-    batch.forEach((node) => fragment.appendChild(node.cloneNode(true)));
-    grid.appendChild(fragment);
-
-    // Animate new cards
-    const newCards = grid.querySelectorAll<HTMLElement>(".product-card:not([data-revealed])");
-    newCards.forEach((card) => {
-      card.setAttribute("data-revealed", "true");
-      card.style.opacity = "0";
-      card.style.transform = "translateY(20px)";
-      requestAnimationFrame(() => {
-        card.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-        card.style.opacity = "1";
-        card.style.transform = "translateY(0)";
-      });
-    });
-
-    // Attach lightbox
-    if ((window as any).__attachCardListeners) {
-      (window as any).__attachCardListeners(Array.from(newCards));
-    }
-
-    if (remainingNodes.length === 0) {
-      sentinel.style.display = "none";
-      loaded = true;
-    }
-
-    if ((window as any).ScrollTrigger) {
-      (window as any).ScrollTrigger.refresh();
-    }
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting && !loaded) {
-        loadNextBatch();
-      }
-    },
-    { rootMargin: "300px" }
-  );
-  observer.observe(sentinel);
-
-  // Mark initial cards as revealed
   grid.querySelectorAll<HTMLElement>(".product-card").forEach((c) => {
     c.setAttribute("data-revealed", "true");
   });

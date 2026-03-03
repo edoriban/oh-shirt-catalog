@@ -7,70 +7,44 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
 
 <div class="sticky top-[53px] z-40 border-b border-border/60 bg-bg/90 backdrop-blur-xl">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
-    <div class="flex items-center gap-3 py-3">
-      <!-- Category pills -->
-      <div
-        id="category-filters"
-        class="flex min-w-0 flex-1 gap-2 overflow-x-auto scrollbar-none"
-        role="tablist"
-      >
-        <FilterPill filter="all" label="Todos" count={totalCount} active />
+    <!-- Category pills (full width, scrollable) -->
+    <div
+      id="category-filters"
+      class="flex gap-2 overflow-x-auto py-3 scrollbar-none"
+      role="tablist"
+    >
+      <FilterPill filter="all" label="Todos" count={totalCount} active />
 
-        {categories.map((cat) => (
-          <FilterPill
-            filter={cat.slug}
-            label={cat.name}
-            count={cat.count}
-            accent={cat.accent}
-          />
-        ))}
-      </div>
-
-      <!-- Search input -->
-      <div class="relative hidden shrink-0 sm:block">
-        <svg
-          class="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-text-muted"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          id="search-input"
-          type="search"
-          placeholder="Buscar diseño..."
-          autocomplete="off"
-          class="w-44 rounded-full border border-border/60 bg-surface/80 py-2 pl-9 pr-3 text-xs text-text placeholder-text-muted/60 outline-none transition-all duration-200 focus:w-56 focus:border-white/20 focus:bg-surface focus:ring-1 focus:ring-white/10 lg:w-52 lg:focus:w-64"
-          aria-label="Buscar diseños por nombre"
+      {categories.map((cat) => (
+        <FilterPill
+          filter={cat.slug}
+          label={cat.name}
+          count={cat.count}
+          accent={cat.accent}
         />
-      </div>
+      ))}
     </div>
 
-    <!-- Mobile search (below pills) -->
-    <div class="pb-3 sm:hidden">
-      <div class="relative">
-        <svg
-          class="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-text-muted"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          id="search-input-mobile"
-          type="search"
-          placeholder="Buscar por nombre de personaje..."
-          autocomplete="off"
-          class="w-full rounded-xl border border-border/60 bg-surface/80 py-2.5 pl-10 pr-3 text-xs text-text placeholder-text-muted/60 outline-none transition-all duration-200 focus:border-white/20 focus:bg-surface focus:ring-1 focus:ring-white/10"
-          aria-label="Buscar diseños por nombre"
-        />
-      </div>
+    <!-- Search input (always below pills) -->
+    <div class="relative mb-3">
+      <svg
+        width="16" height="16" class="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-text-muted"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Buscar por nombre de personaje..."
+        autocomplete="off"
+        class="w-full rounded-xl border border-border/60 bg-surface/80 py-2.5 pl-10 pr-3 text-xs text-text placeholder-text-muted/60 outline-none transition-all duration-200 focus:border-white/20 focus:bg-surface focus:ring-1 focus:ring-white/10 sm:max-w-sm"
+        aria-label="Buscar diseños por nombre"
+      />
     </div>
   </div>
 </div>
@@ -111,37 +85,16 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
     const pills = document.querySelectorAll<HTMLButtonElement>(".filter-pill");
     const grid = document.getElementById("product-grid")!;
     const noResults = document.getElementById("no-results");
-    const sentinel = document.getElementById("load-sentinel");
-    const template = document.getElementById("remaining-cards") as HTMLTemplateElement | null;
     const banner = document.getElementById("category-banner")!;
     const bannerBar = document.getElementById("category-banner-bar")!;
     const bannerTitle = document.getElementById("category-banner-title")!;
     const bannerDesc = document.getElementById("category-banner-desc")!;
     const bannerCount = document.getElementById("category-banner-count")!;
     const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
-    const searchInputMobile = document.getElementById("search-input-mobile") as HTMLInputElement | null;
     const searchCountEl = document.getElementById("search-count");
 
     let activeFilter = "all";
     let searchQuery = "";
-
-    function loadAllRemaining() {
-      if (!template || template.content.children.length === 0) return;
-      const fragment = document.createDocumentFragment();
-      Array.from(template.content.children).forEach((node) => {
-        const clone = node.cloneNode(true) as HTMLElement;
-        clone.setAttribute("data-revealed", "true");
-        fragment.appendChild(clone);
-      });
-      grid.appendChild(fragment);
-      template.innerHTML = "";
-      if (sentinel) sentinel.style.display = "none";
-
-      if ((window as any).__attachCardListeners) {
-        const newCards = Array.from(grid.querySelectorAll<HTMLElement>(".product-card:not([data-lb])"));
-        (window as any).__attachCardListeners(newCards);
-      }
-    }
 
     function showBanner(slug: string) {
       const cat = categoryMap.get(slug);
@@ -160,9 +113,6 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
     }
 
     function applyFilters() {
-      // When searching, load all products first
-      if (searchQuery) loadAllRemaining();
-
       const cards = grid.querySelectorAll<HTMLElement>(".product-card");
       let visibleCount = 0;
 
@@ -196,10 +146,6 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
         }
       }
 
-      if (!searchQuery && activeFilter === "all" && sentinel && template && template.content.children.length > 0) {
-        sentinel.style.display = "flex";
-      }
-
       if ((window as any).ScrollTrigger) {
         (window as any).ScrollTrigger.refresh();
       }
@@ -220,7 +166,6 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
         pill.setAttribute("aria-selected", "true");
 
         if (activeFilter !== "all") {
-          loadAllRemaining();
           showBanner(activeFilter);
         } else {
           hideBanner();
@@ -230,16 +175,11 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
       });
     });
 
-    // Search input — sync desktop and mobile
-    function onSearch(value: string) {
-      searchQuery = value.toLowerCase().trim();
-      if (searchInput && searchInput.value !== value) searchInput.value = value;
-      if (searchInputMobile && searchInputMobile.value !== value) searchInputMobile.value = value;
+    // Search input
+    searchInput?.addEventListener("input", () => {
+      searchQuery = searchInput.value.toLowerCase().trim();
       applyFilters();
-    }
-
-    searchInput?.addEventListener("input", () => onSearch(searchInput.value));
-    searchInputMobile?.addEventListener("input", () => onSearch(searchInputMobile.value));
+    });
   }
 
   initFilters();
