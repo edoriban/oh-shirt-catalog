@@ -17,14 +17,15 @@ const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
 const featured = shuffled.slice(0, 4);
 
 // Get a representative hero image for each franchise
-const franchiseData = categories.map((cat) => {
-  const preview = getRandomFromCategory(cat.slug, 1);
-  const heroImg = preview[0]?.image;
-  return {
-    ...cat,
-    heroImage: heroImg,
-  };
-});
+const franchiseData = categories
+  .map((cat) => {
+    const preview = getRandomFromCategory(cat.slug, 1);
+    return {
+      ...cat,
+      heroImage: preview[0]?.image,
+    };
+  })
+  .filter((cat) => cat.heroImage);
 ---
 
 <Layout

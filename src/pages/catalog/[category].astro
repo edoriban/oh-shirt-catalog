@@ -20,7 +20,8 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 const products = getProductsByCategory(category.slug);
-const heroProduct = getRandomFromCategory(category.slug, 1)[0] ?? products[0];
+const randomHero = getRandomFromCategory(category.slug, 1);
+const heroProduct = randomHero[0] ?? products[0];
 
 const breadcrumbs = [
   { label: "Inicio", href: "/catalog" },
@@ -38,16 +39,18 @@ const breadcrumbs = [
     <!-- Hero Banner — full width -->
     <section class="relative w-full overflow-hidden pt-[53px]" aria-label={`Colección ${category.name}`}>
       <div class="relative w-full" style="aspect-ratio: 16/5; max-height: 420px;">
-        <Image
-          src={heroProduct.image}
-          alt=""
-          widths={[640, 1024, 1920]}
-          sizes="100vw"
-          class="absolute inset-0 h-full w-full object-cover"
-          loading="eager"
-          decoding="async"
-          role="presentation"
-        />
+        {heroProduct?.image && (
+          <Image
+            src={heroProduct.image}
+            alt=""
+            widths={[640, 1024, 1920]}
+            sizes="100vw"
+            class="absolute inset-0 h-full w-full object-cover"
+            loading="eager"
+            decoding="async"
+            role="presentation"
+          />
+        )}
 
         <!-- Gradient overlays -->
         <div class="absolute inset-0 bg-gradient-to-t from-bg via-bg/50 to-bg/15"></div>
