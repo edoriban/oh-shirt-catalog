@@ -39,7 +39,7 @@ export const categories: Category[] = [
     slug: "thundercats",
     name: "ThunderCats",
     description: "Thunder, Thunder, ThunderCats!",
-    accent: "#ff4444",
+    accent: "#e83e8c",
     count: 12,
   },
   {

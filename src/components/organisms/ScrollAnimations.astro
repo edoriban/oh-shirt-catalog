@@ -3,9 +3,10 @@
 
 <!-- Hide animated elements until GSAP takes over -->
 <style>
-  #hero-eyebrow,
   #hero-title,
   #hero-subtitle,
+  #featured-title,
+  #franchises-title,
   .filter-pill {
     visibility: hidden;
   }
@@ -22,23 +23,17 @@
 
   if (prefersReduced) {
     gsap.set(
-      "#hero-eyebrow, #hero-title, #hero-subtitle, .filter-pill",
+      "#hero-title, #hero-subtitle, #featured-title, #franchises-title, .filter-pill",
       { visibility: "visible" }
     );
   } else {
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
     tl.fromTo(
-      "#hero-eyebrow",
-      { autoAlpha: 0, y: 20 },
-      { autoAlpha: 1, y: 0, duration: 0.6 }
+      "#hero-title",
+      { autoAlpha: 0, y: 40, scale: 0.95 },
+      { autoAlpha: 1, y: 0, scale: 1, duration: 0.9 }
     )
-      .fromTo(
-        "#hero-title",
-        { autoAlpha: 0, y: 40, scale: 0.97 },
-        { autoAlpha: 1, y: 0, scale: 1, duration: 0.8 },
-        "-=0.4"
-      )
       .fromTo(
         "#hero-subtitle",
         { autoAlpha: 0, y: 25 },
@@ -52,7 +47,89 @@
         "-=0.3"
       );
 
-    // Category headers slide in
+    // Featured section title
+    const featuredTitle = document.getElementById("featured-title");
+    if (featuredTitle) {
+      gsap.fromTo(
+        "#featured-title",
+        { autoAlpha: 0, y: 15 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#featured-title",
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+
+    // Featured product cards stagger
+    const featuredGrid = document.getElementById("featured-grid");
+    if (featuredGrid) {
+      gsap.fromTo(
+        "#featured-grid .product-card",
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#featured-grid",
+            start: "top 88%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+
+    // Franchises section title
+    const franchisesTitle = document.getElementById("franchises-title");
+    if (franchisesTitle) {
+      gsap.fromTo(
+        "#franchises-title",
+        { autoAlpha: 0, y: 15 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#franchises-title",
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+
+    // Franchise hero cards stagger
+    const franchiseGrid = document.getElementById("franchise-grid");
+    if (franchiseGrid) {
+      gsap.fromTo(
+        ".franchise-card",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#franchise-grid",
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+
+    // Category headers (for category filter pages)
     gsap.utils.toArray<HTMLElement>(".category-header").forEach((header) => {
       gsap.fromTo(
         header,
@@ -71,7 +148,7 @@
       );
     });
 
-    // Batch reveal for product cards
+    // Batch reveal for product cards (in ProductGrid)
     ScrollTrigger.batch(".product-card[data-revealed]", {
       onEnter: (batch) => {
         gsap.fromTo(

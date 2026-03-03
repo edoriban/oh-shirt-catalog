@@ -48,3 +48,14 @@ export function getProductsByCategory(slug: string): Product[] {
 export function getCategoryInfo(slug: string): Category | undefined {
   return categories.find((c) => c.slug === slug);
 }
+
+/** Get N random products from a category (for hero previews) */
+export function getRandomFromCategory(slug: string, count: number): Product[] {
+  const catProducts = [...getProductsByCategory(slug)];
+  // Fisher-Yates shuffle
+  for (let i = catProducts.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [catProducts[i], catProducts[j]] = [catProducts[j], catProducts[i]];
+  }
+  return catProducts.slice(0, count);
+}
