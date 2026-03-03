@@ -1,0 +1,123 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/organisms/Header.astro";
+import CategoryFilter from "../../components/organisms/CategoryFilter.astro";
+import ProductGrid from "../../components/organisms/ProductGrid.astro";
+import Lightbox from "../../components/organisms/Lightbox.astro";
+import Footer from "../../components/organisms/Footer.astro";
+import WhatsAppButton from "../../components/organisms/WhatsAppButton.astro";
+import Breadcrumb from "../../components/atoms/Breadcrumb.astro";
+import { getAllProducts } from "../../data/products";
+import { categories } from "../../data/categories";
+
+const products = getAllProducts();
+const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
+
+const breadcrumbs = [
+  { label: "Inicio", href: "/catalog" },
+  { label: "Catálogo Completo" },
+];
+---
+
+<Layout
+  title="Catálogo Completo — Oh Shirt!"
+  description={`Explora nuestro catálogo completo de ${totalCount} playeras con diseños exclusivos de tus franquicias favoritas.`}
+>
+  <Header />
+  <main id="main-content">
+    <!-- Page header -->
+    <section class="relative overflow-hidden pb-2 pt-28 sm:pt-32">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute top-0 left-1/2 h-[400px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-accent/[0.05] blur-[120px]"></div>
+      </div>
+
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <Breadcrumb items={breadcrumbs} />
+
+        <h1
+          id="page-title"
+          class="font-display text-2xl font-bold tracking-tight text-text sm:text-3xl"
+        >
+          Catálogo Completo
+        </h1>
+        <p class="mt-1 text-sm text-text-muted sm:text-base">
+          {totalCount} diseños exclusivos de tus franquicias favoritas
+        </p>
+      </div>
+    </section>
+
+    <CategoryFilter />
+    <ProductGrid products={products} />
+  </main>
+  <Footer />
+  <Lightbox />
+  <WhatsAppButton />
+</Layout>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+  (window as any).ScrollTrigger = ScrollTrigger;
+
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!prefersReduced) {
+    gsap.fromTo(
+      "#page-title",
+      { autoAlpha: 0, y: 20 },
+      { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" }
+    );
+
+    gsap.fromTo(
+      ".filter-pill",
+      { autoAlpha: 0, y: 10, scale: 0.95 },
+      { autoAlpha: 1, y: 0, scale: 1, duration: 0.35, stagger: 0.05, ease: "power3.out" }
+    );
+
+    gsap.utils.toArray<HTMLElement>(".category-header").forEach((header) => {
+      gsap.fromTo(
+        header,
+        { x: -20, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: header,
+            start: "top 88%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    });
+
+    ScrollTrigger.batch(".product-card[data-revealed]", {
+      onEnter: (batch) => {
+        gsap.fromTo(
+          batch,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: "power2.out",
+            overwrite: true,
+          }
+        );
+      },
+      start: "top 92%",
+    });
+  } else {
+    gsap.set("#page-title, .filter-pill", { visibility: "visible" });
+  }
+</script>
+
+<style>
+  .filter-pill {
+    visibility: hidden;
+  }
+</style>

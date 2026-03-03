@@ -1,5 +1,5 @@
 ---
-import AccentDot from "../atoms/AccentDot.astro";
+import CategoryIcon from "../atoms/CategoryIcon.astro";
 
 interface Props {
   filter: string;
@@ -23,7 +23,7 @@ const { filter, label, count, accent, active = false } = Astro.props;
   role="tab"
   aria-selected={active ? "true" : "false"}
 >
-  {accent && <AccentDot color={accent} size="md" />}
+  {accent && <CategoryIcon slug={filter} color={accent} class="size-3.5" />}
   <span>{label}</span>
   <span class="rounded-full bg-white/5 px-1.5 py-0.5 text-[10px] tabular-nums opacity-50">{count}</span>
 </button>
