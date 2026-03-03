@@ -1,0 +1,47 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Navegación de ruta" class="mb-4">
+  <ol
+    class="flex flex-wrap items-center gap-1 text-sm"
+    itemscope
+    itemtype="https://schema.org/BreadcrumbList"
+  >
+    {items.map((item, index) => (
+      <li
+        class="flex items-center gap-1"
+        itemprop="itemListElement"
+        itemscope
+        itemtype="https://schema.org/ListItem"
+      >
+        {index > 0 && (
+          <svg class="size-3.5 shrink-0 text-text-muted/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        )}
+        {item.href ? (
+          <a
+            href={item.href}
+            class="text-text-muted transition-colors duration-200 hover:text-text"
+            itemprop="item"
+          >
+            <span itemprop="name">{item.label}</span>
+          </a>
+        ) : (
+          <span class="font-medium text-text" itemprop="name" aria-current="page">{item.label}</span>
+        )}
+        <meta itemprop="position" content={String(index + 1)} />
+      </li>
+    ))}
+  </ol>
+</nav>

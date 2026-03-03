@@ -10,6 +10,7 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://ohshirt.mx");
+const ogImageURL = new URL("/logo.jpg", Astro.site ?? "https://ohshirt.mx");
 ---
 
 <!doctype html>
@@ -18,21 +19,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://ohshirt.
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#06060b" />
     <link rel="canonical" href={canonicalURL.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/logo.jpg" />
+    <meta property="og:image" content={ogImageURL.href} />
     <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="Oh Shirt!" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@oh_shirt_print" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/logo.jpg" />
+    <meta name="twitter:image" content={ogImageURL.href} />
 
     <!-- Fonts: Space Grotesk (display) + DM Sans (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,6 +47,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://ohshirt.
       rel="stylesheet"
     />
 
+    <!-- JSON-LD: Organization -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Oh Shirt!",
+      "url": "https://ohshirt.mx",
+      "logo": ogImageURL.href,
+      "sameAs": [
+        "https://www.instagram.com/oh_shirt_print/"
+      ]
+    })} />
+
     <title>{title}</title>
 
     <style>
@@ -49,6 +66,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://ohshirt.
     </style>
   </head>
   <body class="min-h-screen overflow-x-hidden">
+    <!-- Skip to main content -->
+    <a
+      href="#main-content"
+      class="fixed top-0 left-0 z-[100] -translate-y-full rounded-br-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0"
+    >
+      Saltar al contenido
+    </a>
     <slot />
   </body>
 </html>

@@ -59,7 +59,7 @@
     lbImg.src = bestSrc;
     lbImg.alt = img.alt;
     lbName.textContent = card.dataset.name ?? "";
-    lbDot.style.background = card.dataset.accent ?? "#ff4444";
+    lbDot.style.background = card.dataset.accent ?? "#e83e8c";
 
     const catEl = card.querySelector("[data-category-label]") as HTMLElement | null;
     lbCat.textContent = catEl?.textContent ?? "";
