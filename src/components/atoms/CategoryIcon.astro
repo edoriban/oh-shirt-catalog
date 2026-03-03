@@ -1,0 +1,61 @@
+---
+interface Props {
+  slug: string;
+  color?: string;
+  class?: string;
+}
+
+const { slug, color = "currentColor", class: className = "size-4" } = Astro.props;
+---
+
+{/* Demon Slayer — Katana */}
+{slug === "demon-slayer" && (
+  <svg class={className} viewBox="0 0 24 24" fill="none" stroke={color} stroke-width="2" stroke-linecap="round">
+    <line x1="5" y1="19" x2="19" y2="5" />
+    <line x1="19" y1="5" x2="22" y2="2" />
+    <line x1="3" y1="21" x2="6" y2="18" />
+    <circle cx="19" cy="5" r="0.5" fill={color} />
+  </svg>
+)}
+
+{/* Star Wars — Imperial logo simplified */}
+{slug === "star-wars" && (
+  <svg class={className} viewBox="0 0 24 24" fill={color}>
+    <path d="M12 2L14.5 8.5L21 9.5L16.5 14L17.5 21L12 17.5L6.5 21L7.5 14L3 9.5L9.5 8.5Z" />
+  </svg>
+)}
+
+{/* Saint Seiya — Pegasus wing */}
+{slug === "caballeros-del-zodiaco" && (
+  <svg class={className} viewBox="0 0 24 24" fill={color}>
+    <path d="M4 20C4 20 6 14 8 11C10 8 12 6 14 5C16 4 18 4 20 5C18 7 16 9 14 12C12 15 10 18 8 19C6 20 4 20 4 20Z" />
+    <path d="M8 16C10 13 12 10 15 8" fill="none" stroke="var(--color-bg)" stroke-width="1.5" stroke-linecap="round" />
+  </svg>
+)}
+
+{/* One Piece — Straw hat */}
+{slug === "one-piece" && (
+  <svg class={className} viewBox="0 0 24 24" fill="none" stroke={color} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 14C4 14 8 15 12 15C16 15 20 14 20 14" />
+    <path d="M6 14C6 10 8.7 7 12 7C15.3 7 18 10 18 14" fill={color} stroke="none" />
+    <path d="M3 16C3 16 7 18 12 18C17 18 21 16 21 16" />
+  </svg>
+)}
+
+{/* ThunderCats — Cat eye */}
+{slug === "thundercats" && (
+  <svg class={className} viewBox="0 0 24 24" fill={color}>
+    <path d="M12 4C6 4 2 12 2 12C2 12 6 20 12 20C18 20 22 12 22 12C22 12 18 4 12 4ZM12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8C14.2 8 16 9.8 16 12C16 14.2 14.2 16 12 16Z" />
+    <path d="M12 9L12 15M9 12L15 12" stroke="var(--color-bg)" stroke-width="1.5" stroke-linecap="round" />
+  </svg>
+)}
+
+{/* Stranger Things — Upside down / lightbulb */}
+{slug === "stranger-things" && (
+  <svg class={className} viewBox="0 0 24 24" fill="none" stroke={color} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18H15" />
+    <path d="M10 21H14" />
+    <path d="M12 2C8.1 2 5 5.1 5 9C5 11.4 6.2 13.5 8 14.7V18H16V14.7C17.8 13.5 19 11.4 19 9C19 5.1 15.9 2 12 2Z" fill={color} opacity="0.15" />
+    <path d="M12 2C8.1 2 5 5.1 5 9C5 11.4 6.2 13.5 8 14.7V18H16V14.7C17.8 13.5 19 11.4 19 9C19 5.1 15.9 2 12 2Z" />
+  </svg>
+)}
