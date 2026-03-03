@@ -20,7 +20,7 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 const products = getProductsByCategory(category.slug);
-const heroProduct = getRandomFromCategory(category.slug, 1)[0];
+const heroProduct = getRandomFromCategory(category.slug, 1)[0] ?? products[0];
 
 const breadcrumbs = [
   { label: "Inicio", href: "/catalog" },
@@ -30,8 +30,8 @@ const breadcrumbs = [
 ---
 
 <Layout
-  title={`${category.name} — Oh Shirt!`}
-  description={`Playeras de ${category.name}. ${category.description}. ${category.count} diseños exclusivos.`}
+  title={`Playeras de ${category.name} — Oh Shirt!`}
+  description={`Descubre ${category.count} disenos exclusivos de playeras de ${category.name}. ${category.description}. Envio a todo Mexico.`}
 >
   <Header />
   <main id="main-content">

@@ -19,16 +19,21 @@ const featured = shuffled.slice(0, 4);
 // Get a representative hero image for each franchise
 const franchiseData = categories.map((cat) => {
   const preview = getRandomFromCategory(cat.slug, 1);
+  const heroImg = preview[0]?.image;
   return {
     ...cat,
-    heroImage: preview[0].image,
+    heroImage: heroImg,
   };
 });
 ---
 
-<Layout>
+<Layout
+  title="Oh Shirt! — Playeras Exclusivas de Anime y Pop Culture"
+  description="Catalogo de playeras con disenos exclusivos de Demon Slayer, Star Wars, One Piece, ThunderCats y mas. Envios a todo Mexico."
+>
   <Header />
   <main id="main-content">
+    <h1 class="sr-only">Catalogo de playeras Oh Shirt! — Disenos exclusivos de anime y pop culture</h1>
     <HeroSection />
 
     <!-- Featured Products -->
