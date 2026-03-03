@@ -7,23 +7,81 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
 
 <div class="sticky top-[53px] z-40 border-b border-border/60 bg-bg/90 backdrop-blur-xl">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
-    <div
-      id="category-filters"
-      class="flex gap-2 overflow-x-auto py-3 scrollbar-none"
-      role="tablist"
-    >
-      <FilterPill filter="all" label="Todos" count={totalCount} active />
+    <div class="flex items-center gap-3 py-3">
+      <!-- Category pills -->
+      <div
+        id="category-filters"
+        class="flex min-w-0 flex-1 gap-2 overflow-x-auto scrollbar-none"
+        role="tablist"
+      >
+        <FilterPill filter="all" label="Todos" count={totalCount} active />
 
-      {categories.map((cat) => (
-        <FilterPill
-          filter={cat.slug}
-          label={cat.name}
-          count={cat.count}
-          accent={cat.accent}
+        {categories.map((cat) => (
+          <FilterPill
+            filter={cat.slug}
+            label={cat.name}
+            count={cat.count}
+            accent={cat.accent}
+          />
+        ))}
+      </div>
+
+      <!-- Search input -->
+      <div class="relative hidden shrink-0 sm:block">
+        <svg
+          class="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-text-muted"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Buscar diseño..."
+          autocomplete="off"
+          class="w-44 rounded-full border border-border/60 bg-surface/80 py-2 pl-9 pr-3 text-xs text-text placeholder-text-muted/60 outline-none transition-all duration-200 focus:w-56 focus:border-white/20 focus:bg-surface focus:ring-1 focus:ring-white/10 lg:w-52 lg:focus:w-64"
+          aria-label="Buscar diseños por nombre"
         />
-      ))}
+      </div>
+    </div>
+
+    <!-- Mobile search (below pills) -->
+    <div class="pb-3 sm:hidden">
+      <div class="relative">
+        <svg
+          class="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-text-muted"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input-mobile"
+          type="search"
+          placeholder="Buscar por nombre de personaje..."
+          autocomplete="off"
+          class="w-full rounded-xl border border-border/60 bg-surface/80 py-2.5 pl-10 pr-3 text-xs text-text placeholder-text-muted/60 outline-none transition-all duration-200 focus:border-white/20 focus:bg-surface focus:ring-1 focus:ring-white/10"
+          aria-label="Buscar diseños por nombre"
+        />
+      </div>
     </div>
   </div>
+</div>
+
+<!-- Search result count -->
+<div
+  id="search-count"
+  class="mx-auto hidden max-w-7xl px-4 pt-4 sm:px-6"
+  aria-live="polite"
+>
+  <p class="text-xs text-text-muted"></p>
 </div>
 
 <!-- Active category banner (hidden by default, shown on filter) -->
@@ -60,6 +118,12 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
     const bannerTitle = document.getElementById("category-banner-title")!;
     const bannerDesc = document.getElementById("category-banner-desc")!;
     const bannerCount = document.getElementById("category-banner-count")!;
+    const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
+    const searchInputMobile = document.getElementById("search-input-mobile") as HTMLInputElement | null;
+    const searchCountEl = document.getElementById("search-count");
+
+    let activeFilter = "all";
+    let searchQuery = "";
 
     function loadAllRemaining() {
       if (!template || template.content.children.length === 0) return;
@@ -73,7 +137,6 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
       template.innerHTML = "";
       if (sentinel) sentinel.style.display = "none";
 
-      // Attach lightbox listeners to new cards
       if ((window as any).__attachCardListeners) {
         const newCards = Array.from(grid.querySelectorAll<HTMLElement>(".product-card:not([data-lb])"));
         (window as any).__attachCardListeners(newCards);
@@ -96,11 +159,57 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
       banner.classList.add("hidden");
     }
 
+    function applyFilters() {
+      // When searching, load all products first
+      if (searchQuery) loadAllRemaining();
+
+      const cards = grid.querySelectorAll<HTMLElement>(".product-card");
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const category = card.dataset.category;
+        const name = (card.dataset.name ?? "").toLowerCase();
+        const matchCategory = activeFilter === "all" || category === activeFilter;
+        const matchSearch = !searchQuery || name.includes(searchQuery);
+        const show = matchCategory && matchSearch;
+        card.style.display = show ? "" : "none";
+        if (show) visibleCount++;
+      });
+
+      // Hide category headers when filtering or searching
+      grid.querySelectorAll<HTMLElement>(".category-header").forEach((h) => {
+        h.style.display = (activeFilter === "all" && !searchQuery) ? "" : "none";
+      });
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? "block" : "none";
+      }
+
+      // Search count feedback
+      if (searchCountEl) {
+        if (searchQuery) {
+          const p = searchCountEl.querySelector("p")!;
+          p.textContent = `${visibleCount} resultado${visibleCount !== 1 ? "s" : ""} para "${searchQuery}"`;
+          searchCountEl.classList.remove("hidden");
+        } else {
+          searchCountEl.classList.add("hidden");
+        }
+      }
+
+      if (!searchQuery && activeFilter === "all" && sentinel && template && template.content.children.length > 0) {
+        sentinel.style.display = "flex";
+      }
+
+      if ((window as any).ScrollTrigger) {
+        (window as any).ScrollTrigger.refresh();
+      }
+    }
+
+    // Category pill clicks
     pills.forEach((pill) => {
       pill.addEventListener("click", () => {
-        const filter = pill.dataset.filter!;
+        activeFilter = pill.dataset.filter!;
 
-        // Update pill styles
         pills.forEach((p) => {
           p.classList.remove("active", "border-accent", "bg-accent/15", "text-accent", "font-semibold");
           p.classList.add("border-border", "text-text-muted", "font-medium");
@@ -110,51 +219,27 @@ const totalCount = categories.reduce((sum, c) => sum + c.count, 0);
         pill.classList.remove("border-border", "text-text-muted", "font-medium");
         pill.setAttribute("aria-selected", "true");
 
-        // Show/hide category banner
-        if (filter !== "all") {
+        if (activeFilter !== "all") {
           loadAllRemaining();
-          showBanner(filter);
+          showBanner(activeFilter);
         } else {
           hideBanner();
         }
 
-        // Re-query cards
-        const cards = grid.querySelectorAll<HTMLElement>(".product-card");
-        let visibleCount = 0;
-
-        cards.forEach((card) => {
-          const category = card.dataset.category;
-          const show = filter === "all" || category === filter;
-          if (show) {
-            card.style.display = "";
-            visibleCount++;
-          } else {
-            card.style.display = "none";
-          }
-        });
-
-        // Also hide category headers when filtering
-        grid.querySelectorAll<HTMLElement>(".category-header").forEach((h) => {
-          if (filter === "all") {
-            h.style.display = "";
-          } else {
-            h.style.display = "none";
-          }
-        });
-
-        if (noResults) {
-          noResults.style.display = visibleCount === 0 ? "block" : "none";
-        }
-
-        if (filter === "all" && sentinel && template && template.content.children.length > 0) {
-          sentinel.style.display = "flex";
-        }
-
-        if ((window as any).ScrollTrigger) {
-          (window as any).ScrollTrigger.refresh();
-        }
+        applyFilters();
       });
     });
+
+    // Search input — sync desktop and mobile
+    function onSearch(value: string) {
+      searchQuery = value.toLowerCase().trim();
+      if (searchInput && searchInput.value !== value) searchInput.value = value;
+      if (searchInputMobile && searchInputMobile.value !== value) searchInputMobile.value = value;
+      applyFilters();
+    }
+
+    searchInput?.addEventListener("input", () => onSearch(searchInput.value));
+    searchInputMobile?.addEventListener("input", () => onSearch(searchInputMobile.value));
   }
 
   initFilters();
